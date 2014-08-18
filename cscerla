@@ -1,0 +1,77 @@
+[33mcommit 9dfb642b0ee9c128c14bfd3006f8616279c98727[m
+Author: onaxsys <onaefe@outlook.com>
+Date:   Fri Aug 1 11:47:07 2014 +0100
+
+    August 1st Commit
+
+[1mdiff --git a/app/models/user.rb b/app/models/user.rb[m
+[1mindex d1e7691..16a9a2a 100644[m
+[1m--- a/app/models/user.rb[m
+[1m+++ b/app/models/user.rb[m
+[36m@@ -1,7 +1,8 @@[m
+ class User < ActiveRecord::Base[m
+   [m
+   [m
+[31m-  attr_accessible :name, :email;[m
+[32m+[m[32m  attr_accessible :name, :email, :password, :password_confirmation;[m
+[32m+[m[41m  [m
+   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i[m
+   [m
+   [m
+[36m@@ -13,4 +14,18 @@[m [mclass User < ActiveRecord::Base[m
+   :presence => true[m
+   )[m
+   [m
+[32m+[m[32m  validates(:password, :presence => true,[m
+[32m+[m[32m            :confirmation => true,[m
+[32m+[m[32m            :length => {:within => 6..40}[m
+[32m+[m[32m            )[m
+[32m+[m[32m  before_save(:encryp_password)[m
+[32m+[m[41m  [m
+[32m+[m[32m  private[m
+[32m+[m[32m    def encrypt_password[m
+[32m+[m[32m      self.encrypted_password = encrypt(password)[m
+[32m+[m[32m    end[m
+[32m+[m[41m    [m
+[32m+[m[32m    def encrypt(string)[m
+[32m+[m[32m      string #Only a temporary implementation[m
+[32m+[m[32m    end[m
+ end[m
+[1mdiff --git a/db/migrate/20140727224635_add_password_to_users.rb b/db/migrate/20140727224635_add_password_to_users.rb[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0621dc1[m
+[1m--- /dev/null[m
+[1m+++ b/db/migrate/20140727224635_add_password_to_users.rb[m
+[36m@@ -0,0 +1,9 @@[m
+[32m+[m[32mclass AddPasswordToUsers < ActiveRecord::Migration[m
+[32m+[m[32m  def self.up[m
+[32m+[m[32m    add_column :users, :encrypted_password, :string[m
+[32m+[m[32m  end[m
+[32m+[m
+[32m+[m[32m  def self.down[m
+[32m+[m[32m    remove_column :users, :encrypted_password[m
+[32m+[m[32m  end[m
+[32m+[m[32mend[m
+[1mdiff --git a/db/schema.rb b/db/schema.rb[m
+[1mindex 8628272..450d104 100644[m
+[1m--- a/db/schema.rb[m
+[1m+++ b/db/schema.rb[m
+[36m@@ -10,7 +10,7 @@[m
+ #[m
+ # It's strongly recommended to check this file into your version control system.[m
+ [m
+[31m-ActiveRecord::Schema.define(:version => 20140718063741) do[m
+[32m+[m[32mActiveRecord::Schema.define(:version => 20140727224635) do[m
+ [m
+   create_table "microposts", :force => true do |t|[m
+     t.text     "content"[m
+[36m@@ -24,6 +24,9 @@[m [mActiveRecord::Schema.define(:version => 20140718063741) do[m
+     t.string   "email"[m
+     t.datetime "created_at"[m
+     t.datetime "updated_at"[m
+[32m+[m[32m    t.string   "encrypted_password"[m
+   end[m
+ [m
+[32m+[m[32m  add_index "users", ["email"], :name => "index_email_unique", :unique => true[m
+[32m+[m
+ end[m

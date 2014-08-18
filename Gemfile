@@ -15,7 +15,7 @@ gem 'rails', '3.0.5'
 
   
 group :production do
-
+ gem 'pg';
 end
 
 group :development, :test do
