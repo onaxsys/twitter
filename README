@@ -13,7 +13,8 @@ PostgreSQL and SQLite 3.
 
 The default directory structure of a generated Ruby on Rails application:
 
-  |-- app
+  |-- appgit status
+  
   |   |-- controllers
   |   |-- helpers
   |   |-- mailers
